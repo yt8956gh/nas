@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/free5gc/nas/nasType"
+	"github.com/free5gc/n3ue/nas/nasType"
 )
 
 func TestNasTypeNewExtendedProtocolDiscriminatort(t *testing.T) {

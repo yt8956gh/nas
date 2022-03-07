@@ -25,7 +25,7 @@ type PDUSessionEstablishmentAccept struct {
 	*nasType.AuthorizedQosFlowDescriptions
 	*nasType.ExtendedProtocolConfigurationOptions
 	*nasType.DNN
-	*nasType.ATSSSContainer
+	*nasType.AtsssContainer
 }
 
 func NewPDUSessionEstablishmentAccept(iei uint8) (pDUSessionEstablishmentAccept *PDUSessionEstablishmentAccept) {
@@ -44,7 +44,7 @@ const (
 	PDUSessionEstablishmentAcceptAuthorizedQosFlowDescriptionsType        uint8 = 0x79
 	PDUSessionEstablishmentAcceptExtendedProtocolConfigurationOptionsType uint8 = 0x7B
 	PDUSessionEstablishmentAcceptDNNType                                  uint8 = 0x25
-	PDUSessionEstablishmentAcceptATSSSContainer                           uint8 = 0x77
+	PDUSessionEstablishmentAcceptAtsssContainer                           uint8 = 0x77
 )
 
 func (a *PDUSessionEstablishmentAccept) EncodePDUSessionEstablishmentAccept(buffer *bytes.Buffer) {
@@ -174,11 +174,11 @@ func (a *PDUSessionEstablishmentAccept) DecodePDUSessionEstablishmentAccept(byte
 			binary.Read(buffer, binary.BigEndian, &a.DNN.Len)
 			a.DNN.SetLen(a.DNN.GetLen())
 			binary.Read(buffer, binary.BigEndian, a.DNN.Buffer[:a.DNN.GetLen()])
-		case PDUSessionEstablishmentAcceptATSSSContainer:
-			a.ATSSSContainer = nasType.NewATSSSContainer(ieiN)
-			binary.Read(buffer, binary.BigEndian, &a.ATSSSContainer.Len)
-			a.ATSSSContainer.SetLen(a.ATSSSContainer.GetLen())
-			binary.Read(buffer, binary.BigEndian, a.DNN.Buffer[:a.ATSSSContainer.GetLen()])
+		case PDUSessionEstablishmentAcceptAtsssContainer:
+			a.AtsssContainer = nasType.NewAtsssContainer(ieiN)
+			binary.Read(buffer, binary.BigEndian, &a.AtsssContainer.Len)
+			a.AtsssContainer.SetLen(a.AtsssContainer.GetLen())
+			binary.Read(buffer, binary.BigEndian, a.AtsssContainer.Buffer[:a.AtsssContainer.GetLen()])
 		default:
 		}
 	}
