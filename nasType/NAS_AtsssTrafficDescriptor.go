@@ -1,5 +1,10 @@
 package nasType
 
+import (
+	"bytes"
+	"encoding/binary"
+)
+
 // TS 24.526 5.2.1
 const (
 	AtsssTrafficDescriptorTypeIdMatchAll                         uint8 = 0b00000001
@@ -57,9 +62,21 @@ type AtsssTrafficDescriptor struct {
 	Buffer []uint8
 }
 
-func NewAtsssTrafficDescriptor(typeID uint8) (a *AtsssTrafficDescriptor) {
-	a = &AtsssTrafficDescriptor{
-		TypeID: typeID,
+func NewAtsssTrafficDescriptor() *AtsssTrafficDescriptor {
+	return &AtsssTrafficDescriptor{}
+}
+
+func (a *AtsssTrafficDescriptor) Decode(b []byte) error {
+	buffer := bytes.NewBuffer(b)
+	if err := binary.Read(buffer, binary.BigEndian, &a.TypeID); err != nil {
+		return err
 	}
-	return
+	if err := binary.Read(buffer, binary.BigEndian, &a.Len); err != nil {
+		return err
+	}
+	if err := binary.Read(buffer, binary.BigEndian, a.Buffer[:a.Len]); err != nil {
+		return err
+	}
+
+	return nil
 }

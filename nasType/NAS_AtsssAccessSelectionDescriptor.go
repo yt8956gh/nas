@@ -1,5 +1,11 @@
 package nasType
 
+import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+)
+
 // TS 24.193 6.1.3.2
 // Length of access selection descriptor
 const (
@@ -58,15 +64,40 @@ type AtsssAccessSelectionDescriptor struct {
 	SteeringModeInfo uint8
 }
 
-func NewAtsssAccessSelectionDescriptor(len, steeringFunc, steeringMode, steeringModeInfo uint8) (
-	a *AtsssAccessSelectionDescriptor) {
-	a = &AtsssAccessSelectionDescriptor{
-		Len:              len,
-		SteeringFunc:     steeringFunc,
-		SteeringMode:     steeringMode,
-		SteeringModeInfo: steeringModeInfo,
+func NewAtsssAccessSelectionDescriptor() *AtsssAccessSelectionDescriptor {
+	return &AtsssAccessSelectionDescriptor{}
+}
+
+func (a *AtsssAccessSelectionDescriptor) Decode(b []byte) error {
+	buffer := bytes.NewBuffer(b)
+	if err := binary.Read(buffer, binary.BigEndian, a.Len); err != nil {
+		return err
 	}
-	return a
+	if buffer.Len() == int(a.Len) {
+		return fmt.Errorf("The length of data doesn't match length field.")
+	}
+	if err := binary.Read(buffer, binary.BigEndian, a.SteeringFunc); err != nil {
+		return err
+	}
+	if err := binary.Read(buffer, binary.BigEndian, a.SteeringMode); err != nil {
+		return err
+	}
+
+	if a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModeSmallestDelay {
+		if a.Len != AtsssAccessSelectionDescriptorLenSmallestDelay {
+			return fmt.Errorf("The length of smallest delay selection descriptor doesn't match spec.")
+		}
+	} else if a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModeActiveStandby ||
+		a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModeLoadBalancing ||
+		a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModePriorityBased {
+		if err := binary.Read(buffer, binary.BigEndian, a.SteeringModeInfo); err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("The steering mode doesn't match anything.")
+	}
+
+	return nil
 }
 
 func (a *AtsssAccessSelectionDescriptor) SetLen(len uint8) {

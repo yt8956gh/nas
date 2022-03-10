@@ -10,6 +10,10 @@ type AtsssMeasurementAssistanceInfo struct {
 	AARI           bool
 }
 
+func NewAtsssMeasurementAssistanceInfo() *AtsssMeasurementAssistanceInfo {
+	return &AtsssMeasurementAssistanceInfo{}
+}
+
 func (a *AtsssMeasurementAssistanceInfo) GetIdentifier() uint8 {
 	return AtsssParameterIdentifierMeasurementAssistanceInfo
 }

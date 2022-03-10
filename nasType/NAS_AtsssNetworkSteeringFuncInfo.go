@@ -10,6 +10,10 @@ type AtsssNetworkSteeringFuncInfo struct {
 	MptcpProxyInfoList  []MptcpProxyInfo
 }
 
+func NewAtsssNetworkSteeringFuncInfo() *AtsssNetworkSteeringFuncInfo {
+	return &AtsssNetworkSteeringFuncInfo{}
+}
+
 func (a *AtsssNetworkSteeringFuncInfo) GetIdentifier() uint8 {
 	return AtsssParameterIdentifierNetworkSteeringfuncInfo
 }

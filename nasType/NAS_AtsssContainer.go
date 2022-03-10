@@ -1,6 +1,7 @@
 package nasType
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 )
@@ -33,29 +34,43 @@ func (a *AtsssContainer) GetLen() uint16 {
 }
 
 func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
-	var start int
+	buffer := bytes.NewBuffer(a.Buffer)
 	aps := []AtsssParameter{}
-	for start < int(a.Len) {
-		var ap AtsssParameter
-		id := a.Buffer[start]
-		contentLen := binary.BigEndian.Uint16(a.Buffer[start+1 : start+3])
-		start += 3
+	for buffer.Len() > 0 {
+		var (
+			ap     AtsssParameter
+			id     uint8
+			length uint16
+		)
+
+		if err := binary.Read(buffer, binary.BigEndian, &id); err != nil {
+			return nil, err
+		}
 
 		switch id {
 		case AtsssParameterIdentifierAtsssRule:
-			ap = new(AtsssRule)
+			ap = NewAtsssRule()
 		case AtsssParameterIdentifierNetworkSteeringfuncInfo:
-			ap = new(AtsssNetworkSteeringFuncInfo)
+			ap = NewAtsssNetworkSteeringFuncInfo()
 		case AtsssParameterIdentifierMeasurementAssistanceInfo:
-			ap = new(AtsssMeasurementAssistanceInfo)
+			ap = NewAtsssMeasurementAssistanceInfo()
 		default:
 			return nil, fmt.Errorf("Unknown ATSSS Parameter id: %d", id)
 		}
 
-		if err := ap.Decode(a.Buffer[start : start+int(contentLen)]); err != nil {
+		if err := binary.Read(buffer, binary.BigEndian, &length); err != nil {
 			return nil, err
 		}
-		start += int(contentLen)
+
+		content := make([]byte, length)
+
+		if err := binary.Read(buffer, binary.BigEndian, &content); err != nil {
+			return nil, err
+		}
+
+		if err := ap.Decode(content); err != nil {
+			return nil, err
+		}
 		aps = append(aps, ap)
 	}
 	return aps, nil
