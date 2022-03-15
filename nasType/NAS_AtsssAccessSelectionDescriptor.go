@@ -73,7 +73,7 @@ func (a *AtsssAccessSelectionDescriptor) Decode(b []byte) error {
 	if err := binary.Read(buffer, binary.BigEndian, a.Len); err != nil {
 		return err
 	}
-	if buffer.Len() == int(a.Len) {
+	if buffer.Len() != int(a.Len) {
 		return fmt.Errorf("The length of data doesn't match length field.")
 	}
 	if err := binary.Read(buffer, binary.BigEndian, a.SteeringFunc); err != nil {
@@ -98,6 +98,28 @@ func (a *AtsssAccessSelectionDescriptor) Decode(b []byte) error {
 	}
 
 	return nil
+}
+
+func (a *AtsssAccessSelectionDescriptor) Encode() ([]byte, error) {
+	var b []byte
+	buffer := bytes.NewBuffer(b)
+	if err := binary.Write(buffer, binary.BigEndian, &a.Len); err != nil {
+		return nil, err
+	}
+	if err := binary.Write(buffer, binary.BigEndian, &a.SteeringFunc); err != nil {
+		return nil, err
+	}
+	if err := binary.Write(buffer, binary.BigEndian, &a.SteeringMode); err != nil {
+		return nil, err
+	}
+
+	if a.SteeringMode != AtsssAccessSelectionDescriptorSteeringModeSmallestDelay {
+		if err := binary.Write(buffer, binary.BigEndian, &a.SteeringModeInfo); err != nil {
+			return nil, err
+		}
+	}
+
+	return buffer.Bytes(), nil
 }
 
 func (a *AtsssAccessSelectionDescriptor) SetLen(len uint8) {

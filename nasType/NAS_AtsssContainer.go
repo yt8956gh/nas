@@ -24,6 +24,10 @@ func (a *AtsssContainer) SetIei(iei uint8) {
 	a.Iei = iei
 }
 
+func (a *AtsssContainer) GetIei() uint8 {
+	return a.Iei
+}
+
 func (a *AtsssContainer) SetLen(len uint16) {
 	a.Len = len
 	a.Buffer = make([]uint8, a.Len)
@@ -74,4 +78,25 @@ func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
 		aps = append(aps, ap)
 	}
 	return aps, nil
+}
+
+func (a *AtsssContainer) SetAtsssParameters(aps []AtsssParameter) error {
+	buffer := bytes.NewBuffer(a.Buffer)
+	for _, ap := range aps {
+		if err := binary.Write(buffer, binary.BigEndian, ap.GetIdentifier()); err != nil {
+			return fmt.Errorf("Write ATSSS Parameter ID to buffer Fail: %s", err)
+		}
+
+		content, err := ap.Encode()
+		if err != nil {
+			return fmt.Errorf("ATSSS Parameter Encode Fail: %s", err)
+		}
+		if err := binary.Write(buffer, binary.BigEndian, uint16(len(content))); err != nil {
+			return fmt.Errorf("Write ATSSS Parameter Length to buffer Fail: %s", err)
+		}
+		if err := binary.Write(buffer, binary.BigEndian, content); err != nil {
+			return fmt.Errorf("Write ATSSS Parameter Content to buffer Fail: %s", err)
+		}
+	}
+	return nil
 }

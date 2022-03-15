@@ -103,6 +103,11 @@ func (a *PDUSessionEstablishmentAccept) EncodePDUSessionEstablishmentAccept(buff
 		binary.Write(buffer, binary.BigEndian, a.DNN.GetLen())
 		binary.Write(buffer, binary.BigEndian, &a.DNN.Buffer)
 	}
+	if a.AtsssContainer != nil {
+		binary.Write(buffer, binary.BigEndian, a.AtsssContainer.GetIei())
+		binary.Write(buffer, binary.BigEndian, a.AtsssContainer.GetLen())
+		binary.Write(buffer, binary.BigEndian, &a.AtsssContainer.Buffer)
+	}
 }
 
 func (a *PDUSessionEstablishmentAccept) DecodePDUSessionEstablishmentAccept(byteArray *[]byte) {
