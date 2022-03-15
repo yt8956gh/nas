@@ -34,7 +34,7 @@ func (a *AtsssNetworkSteeringFuncInfo) GetIdentifier() uint8 {
 
 func (a *AtsssNetworkSteeringFuncInfo) SetUe3gppIPv4Addr(ip net.IP) {
 	a.Ue3gppIpType = AtsssNetworkSteeringFuncInfoIpTypeIPv4
-	a.Ue3gppIpAddr = ip
+	a.Ue3gppIpAddr = ip.To4()
 }
 
 func (a *AtsssNetworkSteeringFuncInfo) GetUe3gppIPv4Addr() net.IP {
@@ -43,7 +43,7 @@ func (a *AtsssNetworkSteeringFuncInfo) GetUe3gppIPv4Addr() net.IP {
 
 func (a *AtsssNetworkSteeringFuncInfo) SetUeNon3gppIPv4Addr(ip net.IP) {
 	a.UeNon3gppIpType = AtsssNetworkSteeringFuncInfoIpTypeIPv4
-	a.UeNon3gppIpAddr = ip
+	a.UeNon3gppIpAddr = ip.To4()
 }
 
 func (a *AtsssNetworkSteeringFuncInfo) GetUeNon3gppIPv4Addr() net.IP {
