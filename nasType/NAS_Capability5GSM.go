@@ -1,6 +1,7 @@
 package nasType
 
 // Capability5GSM 9.11.4.1
+// ATSSSST Row, sBit, len = [0, 0], 7 , 4
 // MH6PDU Row, sBit, len = [0, 0], 2 , 1
 // RqoS Row, sBit, len = [0, 0], 1 , 1
 // Spare Row, sBit, len = [1, 12], 8 , 96
@@ -9,6 +10,15 @@ type Capability5GSM struct {
 	Len   uint8
 	Octet [13]uint8
 }
+
+// TS 24.501 9.11.4.1.1
+// ATSSS-ST: Supported ATSSS steering functionalities and steering modes
+const (
+	AtsssSTAtsssNotSupported                            uint8 = 0x0
+	AtsssSTAtsssLLSupported                             uint8 = 0x1
+	AtsssSTMptcpAndAtsssLLWithOnlyActiveStandySupported uint8 = 0x2
+	AtsssSTMptcpAndAtsssLLSupported                     uint8 = 0x3
+)
 
 func NewCapability5GSM(iei uint8) (capability5GSM *Capability5GSM) {
 	capability5GSM = &Capability5GSM{}
@@ -38,6 +48,18 @@ func (a *Capability5GSM) GetLen() (len uint8) {
 // Len Row, sBit, len = [], 8, 8
 func (a *Capability5GSM) SetLen(len uint8) {
 	a.Len = len
+}
+
+// Capability5GSM 9.11.4.1
+// ATSSSST Row, sBit, len = [0, 0], 7 , 4
+func (a *Capability5GSM) GetATSSSST() (aTSSSST uint8) {
+	return a.Octet[0] & GetBitMask(7, 3) >> (3)
+}
+
+// Capability5GSM 9.11.4.1
+// ATSSSST Row, sBit, len = [0, 0], 7 , 4
+func (a *Capability5GSM) SetATSSSST(aTSSSST uint8) {
+	a.Octet[0] = (a.Octet[0] & 135) + ((aTSSSST & 4) << 3)
 }
 
 // Capability5GSM 9.11.4.1
