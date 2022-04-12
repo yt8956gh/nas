@@ -9,7 +9,8 @@ package nasType
 // IMSVoPS3GPP Row, sBit, len = [0, 0], 1 , 1
 // MCSI Row, sBit, len = [1, 1], 2 , 1
 // EMCN Row, sBit, len = [1, 1], 1 , 1
-// Spare Row, sBit, len = [2, 2], 8 , 8
+// Spare Row, sBit, len = [2, 2], 8 , 5
+// ATS-IND Row, sBit, len = [2, 2], 2 , 1
 type NetworkFeatureSupport5GS struct {
 	Iei   uint8
 	Len   uint8
@@ -143,13 +144,25 @@ func (a *NetworkFeatureSupport5GS) SetEMCN(eMCN uint8) {
 }
 
 // NetworkFeatureSupport5GS 9.11.3.5
-// Spare Row, sBit, len = [2, 2], 8 , 8
+// Spare Row, sBit, len = [2, 2], 8 , 5
 func (a *NetworkFeatureSupport5GS) GetSpare() (spare uint8) {
-	return a.Octet[2]
+	return a.Octet[2] & GetBitMask(8, 3) >> (3)
 }
 
 // NetworkFeatureSupport5GS 9.11.3.5
-// Spare Row, sBit, len = [2, 2], 8 , 8
+// Spare Row, sBit, len = [2, 2], 8 , 5
 func (a *NetworkFeatureSupport5GS) SetSpare(spare uint8) {
-	a.Octet[2] = spare
+	a.Octet[2] = (a.Octet[2] & 7) + ((spare & 31) << 3)
+}
+
+// NetworkFeatureSupport5GS 9.11.3.5
+// ATS-IND Row, sBit, len = [2, 2], 2 , 1
+func (a *NetworkFeatureSupport5GS) GetATSIND() (aTSIND uint8) {
+	return a.Octet[2] & GetBitMask(2, 1) >> (1)
+}
+
+// NetworkFeatureSupport5GS 9.11.3.5
+// ATS-IND Row, sBit, len = [2, 2], 2 , 1
+func (a *NetworkFeatureSupport5GS) SetATSIND(aTSIND uint8) {
+	a.Octet[2] = (a.Octet[2] & 253) + ((aTSIND & 1) << 1)
 }
