@@ -9,20 +9,20 @@ import (
 // TS 24.193 6.1.3.2
 // Length of access selection descriptor
 const (
-	AtsssAccessSelectionDescriptorLenSmallestDelay = 0x3 + uint8(iota)
+	AtsssAccessSelectionDescriptorLenSmallestDelay = uint8(iota) + 0x3
 	AtsssAccessSelectionDescriptorLenNotSmallestDelay
 )
 
 // Steering functionality
 const (
-	AtsssAccessSelectionDescriptorSteeringFuncUeSupported = uint8(iota)
+	AtsssAccessSelectionDescriptorSteeringFuncUeSupported = uint8(iota) + 0x1
 	AtsssAccessSelectionDescriptorSteeringFuncMPTCP
 	AtsssAccessSelectionDescriptorSteeringFuncAtsssLL
 )
 
 // Steering mode
 const (
-	AtsssAccessSelectionDescriptorSteeringModeActiveStandby = uint8(iota)
+	AtsssAccessSelectionDescriptorSteeringModeActiveStandby = uint8(iota) + 0x1
 	AtsssAccessSelectionDescriptorSteeringModeSmallestDelay
 	AtsssAccessSelectionDescriptorSteeringModeLoadBalancing
 	AtsssAccessSelectionDescriptorSteeringModePriorityBased
@@ -30,7 +30,7 @@ const (
 
 // Active-standby steering mode information
 const (
-	AtsssAccessSelectionDescriptorActive3gppAndNoStandby = uint8(iota)
+	AtsssAccessSelectionDescriptorActive3gppAndNoStandby = uint8(iota) + 0x1
 	AtsssAccessSelectionDescriptorActive3gppAndNon3gppStandby
 	AtsssAccessSelectionDescriptorActiveNon3gppAndNoStandby
 	AtsssAccessSelectionDescriptorActiveNon3gppAnd3gppStandby
@@ -38,7 +38,7 @@ const (
 
 // Load-balancing steering mode information
 const (
-	AtsssAccessSelectionDescriptorLoadBalance3gpp100Percent = uint8(iota)
+	AtsssAccessSelectionDescriptorLoadBalance3gpp100Percent = uint8(iota) + 0x1
 	AtsssAccessSelectionDescriptorLoadBalance3gpp90Percent
 	AtsssAccessSelectionDescriptorLoadBalance3gpp80Percent
 	AtsssAccessSelectionDescriptorLoadBalance3gpp70Percent
@@ -53,7 +53,7 @@ const (
 
 //  Priority-based steering mode information
 const (
-	AtsssAccessSelectionDescriptorLoadbalancePriorityBased3gppHigher = uint8(iota)
+	AtsssAccessSelectionDescriptorLoadbalancePriorityBased3gppHigher = uint8(iota) + 0x1
 	AtsssAccessSelectionDescriptorLoadbalancePriorityBasedNon3gppHigher
 )
 
