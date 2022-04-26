@@ -8,6 +8,7 @@ const (
 	ULNASTransportRequestTypeInitialEmergencyRequest     uint8 = 3
 	ULNASTransportRequestTypeExistingEmergencyPduSession uint8 = 4
 	ULNASTransportRequestTypeModificationRequest         uint8 = 5
+	ULNASTransportRequestTypeMaPduRequest                uint8 = 6
 	ULNASTransportRequestTypeReserved                    uint8 = 7
 )
 

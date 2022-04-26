@@ -19,6 +19,7 @@ type ULNASTransport struct {
 	*nasType.SNSSAI
 	*nasType.DNN
 	*nasType.AdditionalInformation
+	*nasType.MAPDUSessionInfo
 }
 
 func NewULNASTransport(iei uint8) (uLNASTransport *ULNASTransport) {
@@ -33,6 +34,7 @@ const (
 	ULNASTransportSNSSAIType                uint8 = 0x22
 	ULNASTransportDNNType                   uint8 = 0x25
 	ULNASTransportAdditionalInformationType uint8 = 0x24
+	ULNASTransportMAPDUSessionInfoType      uint8 = 0x0A
 )
 
 func (a *ULNASTransport) EncodeULNASTransport(buffer *bytes.Buffer) {
@@ -67,6 +69,9 @@ func (a *ULNASTransport) EncodeULNASTransport(buffer *bytes.Buffer) {
 		binary.Write(buffer, binary.BigEndian, a.AdditionalInformation.GetIei())
 		binary.Write(buffer, binary.BigEndian, a.AdditionalInformation.GetLen())
 		binary.Write(buffer, binary.BigEndian, &a.AdditionalInformation.Buffer)
+	}
+	if a.MAPDUSessionInfo != nil {
+		binary.Write(buffer, binary.BigEndian, &a.MAPDUSessionInfo.Octet)
 	}
 }
 
@@ -115,6 +120,9 @@ func (a *ULNASTransport) DecodeULNASTransport(byteArray *[]byte) {
 			binary.Read(buffer, binary.BigEndian, &a.AdditionalInformation.Len)
 			a.AdditionalInformation.SetLen(a.AdditionalInformation.GetLen())
 			binary.Read(buffer, binary.BigEndian, a.AdditionalInformation.Buffer[:a.AdditionalInformation.GetLen()])
+		case ULNASTransportMAPDUSessionInfoType:
+			a.MAPDUSessionInfo = nasType.NewMAPDUSessionInfo(ieiN)
+			a.MAPDUSessionInfo.Octet = ieiN
 		default:
 		}
 	}
