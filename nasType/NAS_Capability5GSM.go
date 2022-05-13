@@ -52,14 +52,14 @@ func (a *Capability5GSM) SetLen(len uint8) {
 
 // Capability5GSM 9.11.4.1
 // ATSSSST Row, sBit, len = [0, 0], 7 , 4
-func (a *Capability5GSM) GetATSSSST() (aTSSSST uint8) {
+func (a *Capability5GSM) GetAtsssST() (aTSSSST uint8) {
 	return a.Octet[0] & GetBitMask(7, 3) >> (3)
 }
 
 // Capability5GSM 9.11.4.1
 // ATSSSST Row, sBit, len = [0, 0], 7 , 4
-func (a *Capability5GSM) SetATSSSST(aTSSSST uint8) {
-	a.Octet[0] = (a.Octet[0] & 135) + ((aTSSSST & 4) << 3)
+func (a *Capability5GSM) SetAtsssST(aTSSSST uint8) {
+	a.Octet[0] = (a.Octet[0] & 135) + ((aTSSSST & 15) << 3)
 }
 
 // Capability5GSM 9.11.4.1
