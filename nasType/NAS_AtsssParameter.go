@@ -1,14 +1,16 @@
 package nasType
 
+type AtsssParameterIdentifier uint8
+
 // TS 24.193 6.1.2
 const (
-	AtsssParameterIdentifierAtsssRule                 uint8 = 0x1
-	AtsssParameterIdentifierNetworkSteeringfuncInfo   uint8 = 0x2
-	AtsssParameterIdentifierMeasurementAssistanceInfo uint8 = 0x3
+	AtsssParameterIdentifierAtsssRule                 AtsssParameterIdentifier = 0x1
+	AtsssParameterIdentifierNetworkSteeringfuncInfo   AtsssParameterIdentifier = 0x2
+	AtsssParameterIdentifierMeasurementAssistanceInfo AtsssParameterIdentifier = 0x3
 )
 
 type AtsssParameter interface {
-	GetIdentifier() uint8
+	GetIdentifier() AtsssParameterIdentifier
 	Decode([]byte) error
 	Encode() ([]byte, error)
 }

@@ -43,7 +43,7 @@ func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
 	for buffer.Len() > 0 {
 		var (
 			ap     AtsssParameter
-			id     uint8
+			id     AtsssParameterIdentifier
 			length uint16
 		)
 
@@ -53,7 +53,7 @@ func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
 
 		switch id {
 		case AtsssParameterIdentifierAtsssRule:
-			ap = NewAtsssRule()
+			ap = NewAtsssRules()
 		case AtsssParameterIdentifierNetworkSteeringfuncInfo:
 			ap = NewAtsssNetworkSteeringFuncInfo()
 		case AtsssParameterIdentifierMeasurementAssistanceInfo:
@@ -81,13 +81,15 @@ func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
 }
 
 func (a *AtsssContainer) SetAtsssParameters(aps []AtsssParameter) error {
-	buffer := bytes.NewBuffer(a.Buffer)
+	buffer := bytes.NewBuffer(nil)
+	length := uint16(0)
 	for _, ap := range aps {
 		if err := binary.Write(buffer, binary.BigEndian, ap.GetIdentifier()); err != nil {
 			return fmt.Errorf("Write ATSSS Parameter ID to buffer Fail: %s", err)
 		}
 
 		content, err := ap.Encode()
+		length += uint16(len(content) + 3)
 		if err != nil {
 			return fmt.Errorf("ATSSS Parameter Encode Fail: %s", err)
 		}
@@ -98,5 +100,7 @@ func (a *AtsssContainer) SetAtsssParameters(aps []AtsssParameter) error {
 			return fmt.Errorf("Write ATSSS Parameter Content to buffer Fail: %s", err)
 		}
 	}
+	a.SetLen(length)
+	a.Buffer = buffer.Bytes()
 	return nil
 }

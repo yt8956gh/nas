@@ -59,8 +59,8 @@ const (
 	// AtsssTrafficDescriptorLenIEEE_802_1Q_S_TAG_VID            uint8 =
 	// AtsssTrafficDescriptorLenIEEE_802_1Q_C_TAG_PCP_DEI        uint8 =
 	// AtsssTrafficDescriptorLenIEEE_802_1Q_S_TAG_PCP_DEI        uint8 =
-	AtsssTrafficDescriptorLenEthertype uint8 = 16
-	AtsssTrafficDescriptorLenDNN       uint8 = 2
+	AtsssTrafficDescriptorLenEthertype uint8 = 2
+	AtsssTrafficDescriptorLenDNN       uint8 = 2 // 1 + DNN value field of a variable size
 	// AtsssTrafficDescriptorLenDestinationFQDN                  uint8 =
 	// AtsssTrafficDescriptorLenRegularExpression                uint8 =
 	// AtsssTrafficDescriptorLenOsAppID                          uint8 =

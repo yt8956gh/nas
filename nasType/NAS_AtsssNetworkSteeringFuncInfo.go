@@ -28,7 +28,7 @@ func NewAtsssNetworkSteeringFuncInfo() *AtsssNetworkSteeringFuncInfo {
 	return &AtsssNetworkSteeringFuncInfo{}
 }
 
-func (a *AtsssNetworkSteeringFuncInfo) GetIdentifier() uint8 {
+func (a *AtsssNetworkSteeringFuncInfo) GetIdentifier() AtsssParameterIdentifier {
 	return AtsssParameterIdentifierNetworkSteeringfuncInfo
 }
 
@@ -50,7 +50,8 @@ func (a *AtsssNetworkSteeringFuncInfo) GetUeNon3gppIPv4Addr() net.IP {
 	return a.UeNon3gppIpAddr
 }
 
-func (a *AtsssNetworkSteeringFuncInfo) SetMptcpProxyInfo(list []MptcpProxyInfo) {
+func (a *AtsssNetworkSteeringFuncInfo) SetMptcpProxyInfo(len uint8, list []MptcpProxyInfo) {
+	a.MptcpProxyInfoLen = len
 	a.MptcpProxyInfoList = list
 }
 
@@ -155,4 +156,27 @@ type MptcpProxyInfo struct {
 	IpAddr     []byte
 	Port       uint16
 	Type       uint8
+}
+
+func NewMptcpProxyInfo(v4 bool, v6 bool, ipv4Addr net.IP, ipv6Addr net.IP, port uint16, proxyType uint8) (uint8, MptcpProxyInfo) {
+	len := uint8(4)
+	m := MptcpProxyInfo{
+		IpAddrType: uint8(0),
+		IpAddr:     make([]byte, 0),
+		Port:       port,
+		Type:       proxyType,
+	}
+
+	if v4 {
+		len += net.IPv4len
+		m.IpAddrType += AtsssNetworkSteeringFuncInfoIpTypeIPv4
+		m.IpAddr = append(m.IpAddr, ipv4Addr.To4()...)
+	}
+	if v6 {
+		len += net.IPv6len
+		m.IpAddrType += AtsssNetworkSteeringFuncInfoIpTypeIPv6
+		m.IpAddr = append(m.IpAddr, ipv6Addr.To16()...)
+	}
+
+	return len, m
 }

@@ -153,3 +153,55 @@ func (a *AtsssAccessSelectionDescriptor) SetSteeringModeInfo(smi uint8) {
 func (a *AtsssAccessSelectionDescriptor) GetSteeringModeInfo() uint8 {
 	return a.SteeringModeInfo
 }
+
+func (a *AtsssAccessSelectionDescriptor) SetActiveStandby(modeInfo uint8) {
+	a.SetLen(AtsssAccessSelectionDescriptorLenNotSmallestDelay)
+	a.SetSteeringMode(AtsssAccessSelectionDescriptorSteeringModeActiveStandby)
+	a.SetSteeringModeInfo(modeInfo)
+}
+
+func (a *AtsssAccessSelectionDescriptor) SetLoadBalancing(Var3gLoad uint8) {
+	a.SetLen(AtsssAccessSelectionDescriptorLenNotSmallestDelay)
+	a.SetSteeringMode(AtsssAccessSelectionDescriptorSteeringModeLoadBalancing)
+
+	var percentage3gpp uint8
+	if Var3gLoad >= 100 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp100Percent
+	} else if Var3gLoad >= 90 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp90Percent
+	} else if Var3gLoad >= 80 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp80Percent
+	} else if Var3gLoad >= 70 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp70Percent
+	} else if Var3gLoad >= 60 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp60Percent
+	} else if Var3gLoad >= 50 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp50Percent
+	} else if Var3gLoad >= 40 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp40Percent
+	} else if Var3gLoad >= 30 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp30Percent
+	} else if Var3gLoad >= 20 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp20Percent
+	} else if Var3gLoad >= 10 {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp10Percent
+	} else {
+		percentage3gpp = AtsssAccessSelectionDescriptorLoadBalance3gpp0Percent
+	}
+	a.SetSteeringModeInfo(percentage3gpp)
+}
+
+func (a *AtsssAccessSelectionDescriptor) SetPriorityBased(Is3gppHigher bool) {
+	a.SetLen(AtsssAccessSelectionDescriptorLenNotSmallestDelay)
+	a.SetSteeringMode(AtsssAccessSelectionDescriptorSteeringModePriorityBased)
+	if Is3gppHigher {
+		a.SetSteeringModeInfo(AtsssAccessSelectionDescriptorLoadbalancePriorityBased3gppHigher)
+	} else {
+		a.SetSteeringModeInfo(AtsssAccessSelectionDescriptorLoadbalancePriorityBasedNon3gppHigher)
+	}
+}
+
+func (a *AtsssAccessSelectionDescriptor) SetSmallestDelay() {
+	a.SetLen(AtsssAccessSelectionDescriptorLenSmallestDelay)
+	a.SetSteeringMode(AtsssAccessSelectionDescriptorSteeringModeSmallestDelay)
+}

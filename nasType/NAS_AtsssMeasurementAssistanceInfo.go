@@ -28,7 +28,7 @@ func NewAtsssMeasurementAssistanceInfo() *AtsssMeasurementAssistanceInfo {
 	return &AtsssMeasurementAssistanceInfo{}
 }
 
-func (a *AtsssMeasurementAssistanceInfo) GetIdentifier() uint8 {
+func (a *AtsssMeasurementAssistanceInfo) GetIdentifier() AtsssParameterIdentifier {
 	return AtsssParameterIdentifierMeasurementAssistanceInfo
 }
 
