@@ -27,40 +27,38 @@ func (as *AtsssRules) GetIdentifier() AtsssParameterIdentifier {
 
 func (as *AtsssRules) Decode(b []byte) error {
 	buffer := bytes.NewBuffer(b)
-	len := buffer.Len()
 
-	for len > 0 {
+	for buffer.Len() > 0 {
 		a := NewAtsssRule()
 		if err := binary.Read(buffer, binary.BigEndian, &a.Len); err != nil {
-			return err
+			return fmt.Errorf("binary.Read Len Fail: %+v", err)
 		}
-		if len < int(a.Len) {
-			return fmt.Errorf("The length of data doesn't match length field.")
-		} else {
-			len -= int(a.Len)
+		if buffer.Len() < int(a.Len)-2 {
+			return fmt.Errorf("The length of ATSSS rules doesn't match length field. %d, %d.", buffer.Len(), int(a.Len))
 		}
 		if err := binary.Read(buffer, binary.BigEndian, &a.RuleID); err != nil {
-			return err
+			return fmt.Errorf("binary.Read RuleID Fail: %+v", err)
 		}
 		if err := binary.Read(buffer, binary.BigEndian, &a.RuleOperation); err != nil {
-			return err
+			return fmt.Errorf("binary.Read RuleOperation Fail: %+v", err)
 		}
 		if err := binary.Read(buffer, binary.BigEndian, &a.Precedence); err != nil {
-			return err
+			return fmt.Errorf("binary.Read Precedence Fail: %+v", err)
 		}
 		if err := binary.Read(buffer, binary.BigEndian, &a.LenTrafficDescriptor); err != nil {
-			return err
+			return fmt.Errorf("binary.Read LenTrafficDescriptor Fail: %+v", err)
+		}
+		if a.LenTrafficDescriptor != 0 {
+			content := make([]byte, a.LenTrafficDescriptor)
+			if err := binary.Read(buffer, binary.BigEndian, content[:]); err != nil {
+				return fmt.Errorf("LenTrafficDescriptor Fail: %+v", err)
+			}
+			if err := a.TrafficDescriptor.Decode(content); err != nil {
+				return fmt.Errorf("TrafficDescriptor decode Fail: %+v", err)
+			}
 		}
 
-		content := make([]byte, a.LenTrafficDescriptor)
-		if err := binary.Read(buffer, binary.BigEndian, content[:]); err != nil {
-			return err
-		}
-		if err := a.TrafficDescriptor.Decode(content); err != nil {
-			return err
-		}
-
-		content = make([]byte, buffer.Len())
+		content := make([]byte, a.Len-a.LenTrafficDescriptor-7)
 		if err := binary.Read(buffer, binary.BigEndian, content[:]); err != nil {
 			return err
 		}

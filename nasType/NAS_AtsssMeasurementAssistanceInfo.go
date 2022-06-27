@@ -73,18 +73,19 @@ func (a *AtsssMeasurementAssistanceInfo) Decode(b []byte) error {
 	if a.PmfIpAddrType != AtsssMeasurementAssistanceInfoIpTypeIPv4 {
 		return fmt.Errorf("Only support IPv4 in AtsssMeasurementAssistanceInfo")
 	}
-	if err := binary.Read(buffer, binary.BigEndian, a.PmfIpAddr[:4]); err != nil {
-		return err
+	a.PmfIpAddr = make([]byte, net.IPv4len)
+	if err := binary.Read(buffer, binary.BigEndian, a.PmfIpAddr[:]); err != nil {
+		return fmt.Errorf("Binary.Read PmfIpAddr Fail: %+v", err)
 	}
 	if err := binary.Read(buffer, binary.BigEndian, &a.Pmf3gppPort); err != nil {
-		return err
+		return fmt.Errorf("Binary.Read Pmf3gppPort Fail: %+v", err)
 	}
 	if err := binary.Read(buffer, binary.BigEndian, &a.PmfNon3gppPort); err != nil {
-		return err
+		return fmt.Errorf("Binary.Read PmfNon3gppPort Fail: %+v", err)
 	}
 	var aariByte byte
 	if err := binary.Read(buffer, binary.BigEndian, &aariByte); err != nil {
-		return err
+		return fmt.Errorf("Binary.Read aariByte Fail: %+v", err)
 	}
 	a.AARI = (aariByte == 1)
 

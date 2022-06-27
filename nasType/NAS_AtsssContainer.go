@@ -48,7 +48,7 @@ func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
 		)
 
 		if err := binary.Read(buffer, binary.BigEndian, &id); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Binary.Read id Fail: %+v", err)
 		}
 
 		switch id {
@@ -63,17 +63,17 @@ func (a *AtsssContainer) GetAtsssParameters() ([]AtsssParameter, error) {
 		}
 
 		if err := binary.Read(buffer, binary.BigEndian, &length); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Binary.Read length Fail: %+v", err)
 		}
 
 		content := make([]byte, length)
 
 		if err := binary.Read(buffer, binary.BigEndian, &content); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Binary.Read content Fail: %+v", err)
 		}
 
 		if err := ap.Decode(content); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("ap.Decode id=%d Fail: %+v", id, err)
 		}
 		aps = append(aps, ap)
 	}

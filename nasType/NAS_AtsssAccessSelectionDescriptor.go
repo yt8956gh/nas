@@ -70,17 +70,17 @@ func NewAtsssAccessSelectionDescriptor() *AtsssAccessSelectionDescriptor {
 
 func (a *AtsssAccessSelectionDescriptor) Decode(b []byte) error {
 	buffer := bytes.NewBuffer(b)
-	if err := binary.Read(buffer, binary.BigEndian, a.Len); err != nil {
-		return err
+	if err := binary.Read(buffer, binary.BigEndian, &a.Len); err != nil {
+		return fmt.Errorf("binary.Read Len: Fail: %+v", err)
 	}
-	if buffer.Len() != int(a.Len) {
+	if buffer.Len() != (int(a.Len) - 1) {
 		return fmt.Errorf("The length of data doesn't match length field.")
 	}
-	if err := binary.Read(buffer, binary.BigEndian, a.SteeringFunc); err != nil {
-		return err
+	if err := binary.Read(buffer, binary.BigEndian, &a.SteeringFunc); err != nil {
+		return fmt.Errorf("binary.Read SteeringFunc Fail: %+v", err)
 	}
-	if err := binary.Read(buffer, binary.BigEndian, a.SteeringMode); err != nil {
-		return err
+	if err := binary.Read(buffer, binary.BigEndian, &a.SteeringMode); err != nil {
+		return fmt.Errorf("binary.Read SteeringMode Fail: %+v", err)
 	}
 
 	if a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModeSmallestDelay {
@@ -90,8 +90,8 @@ func (a *AtsssAccessSelectionDescriptor) Decode(b []byte) error {
 	} else if a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModeActiveStandby ||
 		a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModeLoadBalancing ||
 		a.SteeringMode == AtsssAccessSelectionDescriptorSteeringModePriorityBased {
-		if err := binary.Read(buffer, binary.BigEndian, a.SteeringModeInfo); err != nil {
-			return err
+		if err := binary.Read(buffer, binary.BigEndian, &a.SteeringModeInfo); err != nil {
+			return fmt.Errorf("binary.Read SteeringModeInfo Fail: %+v", err)
 		}
 	} else {
 		return fmt.Errorf("The steering mode doesn't match anything.")

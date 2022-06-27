@@ -67,21 +67,23 @@ func (a *AtsssNetworkSteeringFuncInfo) Decode(b []byte) error {
 	if a.Ue3gppIpType != AtsssNetworkSteeringFuncInfoIpTypeIPv4 {
 		return fmt.Errorf("Only support IPv4 in AtsssNetworkSteeringFuncInfo")
 	}
-	if err := binary.Read(buffer, binary.BigEndian, a.Ue3gppIpAddr[:4]); err != nil {
-		return err
+	a.Ue3gppIpAddr = make([]byte, net.IPv4len)
+	if err := binary.Read(buffer, binary.BigEndian, a.Ue3gppIpAddr[:]); err != nil {
+		return fmt.Errorf("Binary.Read Ue3gppIpAddr Fail: %+v", err)
 	}
 	if err := binary.Read(buffer, binary.BigEndian, &a.UeNon3gppIpType); err != nil {
-		return err
+		return fmt.Errorf("Binary.Read UeNon3gppIpType Fail: %+v", err)
 	}
 	if a.UeNon3gppIpType != AtsssNetworkSteeringFuncInfoIpTypeIPv4 {
 		return fmt.Errorf("Only support IPv4 in AtsssNetworkSteeringFuncInfo")
 	}
-	if err := binary.Read(buffer, binary.BigEndian, a.UeNon3gppIpAddr[:4]); err != nil {
-		return err
+	a.UeNon3gppIpAddr = make([]byte, net.IPv4len)
+	if err := binary.Read(buffer, binary.BigEndian, a.UeNon3gppIpAddr[:]); err != nil {
+		return fmt.Errorf("Binary.Read UeNon3gppIpAddr Fail: %+v", err)
 	}
 
 	if err := binary.Read(buffer, binary.BigEndian, &a.MptcpProxyInfoLen); err != nil {
-		return err
+		return fmt.Errorf("Binary.Read MptcpProxyInfoLen Fail: %+v", err)
 	}
 
 	if buffer.Len() != int(a.MptcpProxyInfoLen) {
@@ -91,19 +93,20 @@ func (a *AtsssNetworkSteeringFuncInfo) Decode(b []byte) error {
 	for buffer.Len() > 0 {
 		info := MptcpProxyInfo{}
 		if err := binary.Read(buffer, binary.BigEndian, &info.IpAddrType); err != nil {
-			return err
+			return fmt.Errorf("Binary.Read IpAddrType Fail: %+v", err)
 		}
 		if info.IpAddrType != AtsssNetworkSteeringFuncInfoIpTypeIPv4 {
 			return fmt.Errorf("Only support IPv4 in AtsssNetworkSteeringFuncInfo")
 		}
-		if err := binary.Read(buffer, binary.BigEndian, info.IpAddr[:4]); err != nil {
-			return err
+		info.IpAddr = make([]byte, net.IPv4len)
+		if err := binary.Read(buffer, binary.BigEndian, info.IpAddr[:]); err != nil {
+			return fmt.Errorf("Binary.Read IpAddr Fail: %+v", err)
 		}
 		if err := binary.Read(buffer, binary.BigEndian, &info.Port); err != nil {
-			return err
+			return fmt.Errorf("Binary.Read Port Fail: %+v", err)
 		}
 		if err := binary.Read(buffer, binary.BigEndian, &info.Type); err != nil {
-			return err
+			return fmt.Errorf("Binary.Read Type Fail: %+v", err)
 		}
 		a.MptcpProxyInfoList = append(a.MptcpProxyInfoList, info)
 	}
