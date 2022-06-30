@@ -17,8 +17,12 @@ func NewAtsssRules() *AtsssRules {
 	return as
 }
 
-func (as *AtsssRules) AddAtsssRule(a *AtsssRule) {
-	as.atsssRuleList = append(as.atsssRuleList, a)
+func (as *AtsssRules) AddAtsssRules(a []*AtsssRule) {
+	as.atsssRuleList = append(as.atsssRuleList, a...)
+}
+
+func (as *AtsssRules) GetAtsssRules() []*AtsssRule {
+	return as.atsssRuleList
 }
 
 func (as *AtsssRules) GetIdentifier() AtsssParameterIdentifier {
