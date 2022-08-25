@@ -4,8 +4,8 @@ import (
 	"encoding/hex"
 	"reflect"
 
-	"github.com/free5gc/nas/logger"
 	"github.com/free5gc/openapi/models"
+	"github.com/yt8956gh/nas/logger"
 )
 
 // TS 24.501 9.11.3.9

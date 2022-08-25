@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/free5gc/nas"
-	"github.com/free5gc/nas/logger"
-	"github.com/free5gc/nas/nasMessage"
-	"github.com/free5gc/nas/nasType"
+	"github.com/yt8956gh/nas"
+	"github.com/yt8956gh/nas/logger"
+	"github.com/yt8956gh/nas/nasMessage"
+	"github.com/yt8956gh/nas/nasType"
 )
 
 type nasMessagePDUSessionEstablishmentAcceptData struct {

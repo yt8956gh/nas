@@ -8,9 +8,9 @@ import (
 
 	"github.com/aead/cmac"
 
-	"github.com/free5gc/nas/logger"
-	"github.com/free5gc/nas/security/snow3g"
-	"github.com/free5gc/nas/security/zuc"
+	"github.com/yt8956gh/nas/logger"
+	"github.com/yt8956gh/nas/security/snow3g"
+	"github.com/yt8956gh/nas/security/zuc"
 )
 
 func NASEncrypt(AlgoID uint8, KnasEnc [16]byte, Count uint32, Bearer uint8,
